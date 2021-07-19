@@ -2,11 +2,6 @@ plugins {
     id 'java'
     id 'idea'
     id 'jacoco'
-    id 'com.diffplug.gradle.spotless' version '4.5.1'
-    id 'io.codearte.nexus-staging' version '0.22.0'
-    id 'de.marcphilipp.nexus-publish' version '0.4.0'
-    id 'de.undercouch.download' version '4.1.1'
-    id 'org.ajoberstar.git-publish' version '3.0.0'
 }
 
 ext {
@@ -31,24 +26,18 @@ ext {
     junitPlatformLauncherVersion = '1.5.2'
 }
 
+description 'JitWeb3 base project.'
 
-description 'Web3j base project.'
+group = 'foundation.fantom'
 
-[
-    'jacoco',
-    'java',
-    'javadoc',
-    'publish',
-    'repositories',
-    'spotless'
-].each { buildScript ->
-    download {
-        src "https://raw.githubusercontent.com/web3j/build-tools/master/gradle/$buildScript/build.gradle"
-        dest "$rootDir/gradle/$buildScript/build.gradle"
-        overwrite false
-        quiet true
-        onlyIfModified true
-    }
+repositories {
+    jcenter()
+    mavenCentral()
+    maven { url "https://jitpack.io" }
+}
+
+configurations.all {
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
 }
 
 allprojects {
@@ -57,7 +46,6 @@ allprojects {
             'java',
             'javadoc',
             'repositories',
-            'spotless'
         ].each { buildScript ->
             from("$rootDir/gradle/$buildScript/build.gradle")
         }
